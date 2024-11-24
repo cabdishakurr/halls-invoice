@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="hall_invoice_form_view" model="ir.ui.view">
+        <field name="name">hall.invoice.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Add hall invoice checkbox -->
+            <xpath expr="//field[@name='payment_reference']" position="after">
+                <field name="is_hall_invoice"/>
+            </xpath>
+            
+            <!-- Add number of days field to invoice lines -->
+            <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='quantity']" position="after">
+                <field name="number_of_days" attrs="{'invisible': [('parent.is_hall_invoice', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="hall_invoice_tree_view" model="ir.ui.view">
+        <field name="name">hall.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <tree string="Hall Invoices" create="1" delete="1">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="date"/>
+                <field name="amount_untaxed"/>
+                <field name="amount_tax"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_hall_invoices" model="ir.actions.act_window">
+        <field name="name">Hall Invoices</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('is_hall_invoice', '=', True)]</field>
+        <field name="context">{'default_move_type': 'out_invoice', 'default_is_hall_invoice': True}</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_hall_invoices"
+              name="Hall Invoices"
+              action="action_hall_invoices"
+              parent="account.menu_finance"
+              sequence="5"/>
+</odoo> 
