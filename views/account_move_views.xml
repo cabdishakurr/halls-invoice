@@ -15,6 +15,9 @@
             <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='quantity']" position="after">
                 <field name="number_of_days" attrs="{'invisible': [('parent.is_hall_invoice', '=', False)]}"/>
             </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_hall_invoice"/>
+            </xpath>
         </field>
     </record>
 
